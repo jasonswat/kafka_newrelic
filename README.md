@@ -1,5 +1,4 @@
-## Trying to configure kakfa intergration for newrelic docker agent, using this repo to test
-
+## Trying to configure kafka intergration for newrelic docker agent
 
 1. Add your newrelic key to the docker-compose.yml
 
