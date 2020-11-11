@@ -1,0 +1,64 @@
+---
+version: '2'
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.1
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_LOG4J_TOOLS_ROOT_LOGLEVEL: ERROR
+      ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: ERROR
+      KAKFA_JMX_PORT: 9011
+      JMX_PORT: 9011
+      KAFKA_JMX_HOSTNAME: zookeeper
+    networks:
+      - kafka_net
+
+  kafka:
+    image: confluentinc/cp-kafka:5.3.1
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_TOOLS_ROOT_LOGLEVEL: ERROR
+      KAFKA_LOG4J_ROOT_LOGLEVEL: ERROR
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAKFA_JMX_PORT: 9010
+      JMX_PORT: 9010
+      KAFKA_JMX_HOSTNAME: kafka
+      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Dcom.sun.management.jmxremote.rmi.port=9010 -Djava.net.preferIPv4Stack=true"
+    networks:
+      - kafka_net
+
+  newrelic:
+    image: newrelic/infrastructure:1.12.6
+    container_name: newrelic
+    environment:
+      NRIA_LICENSE_KEY: "Set your nr key here"
+      NRIA_CUSTOM_ATTRIBUTES: '{"env":"local"}'
+      NRIA_VERBOSE: 1
+    depends_on:
+      - kafka
+    networks:
+      - kafka_net
+    volumes:
+      - "$PWD/integrations.d:/var/db/newrelic-infra/integrations.d"
+      - "$PWD/newrelic-integrations/kafka-definition.yml:/var/db/newrelic-infra/newrelic-integrations/kafka-definition.yml"
+      - "$PWD/newrelic-integrations/bin/nri-kafka:/var/db/newrelic-infra/newrelic-integrations/bin/nri-kafka"
+
+networks:
+  kafka_net:
+    driver: bridge
