@@ -17,30 +17,30 @@ instances:
       store: 995
       hostname: ubuntu
 
-  - name: kafka-inventory
-    command: inventory
-    arguments:
-      cluster_name: 995
-      autodiscover_strategy: bootstrap
-      bootstrap_broker_host: kafka
-      bootstrap_broker_jmx_port: 9010
-      topic_mode: all
-    labels:
-      env: local
-      role: kafka
-      store: 995
-      hostname: ubuntu
-
-  - name: kafka-consumer-offsets
-    command: consumer_offset
-    arguments:
-      cluster_name: 995
-      autodiscover_strategy: bootstrap
-      bootstrap_broker_host: kafka
-      bootstrap_broker_jmx_port: 9010
-      consumer_group_regex: '.*'
-    labels:
-      env: local
-      role: kafka
-      store: 995
-      hostname: ubuntu
+      #  - name: kafka-inventory
+      #    command: inventory
+      #    arguments:
+      #      cluster_name: 995
+      #      autodiscover_strategy: bootstrap
+      #      bootstrap_broker_host: kafka
+      #      bootstrap_broker_jmx_port: 9010
+      #      topic_mode: all
+      #    labels:
+      #      env: local
+      #      role: kafka
+      #      store: 995
+      #      hostname: ubuntu
+      #
+      #  - name: kafka-consumer-offsets
+      #    command: consumer_offset
+      #    arguments:
+      #      cluster_name: 995
+      #      autodiscover_strategy: bootstrap
+      #      bootstrap_broker_host: kafka
+      #      bootstrap_broker_jmx_port: 9010
+      #      consumer_group_regex: '.*'
+      #    labels:
+      #      env: local
+      #      role: kafka
+      #      store: 995
+      #      hostname: ubuntu
