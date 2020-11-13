@@ -44,10 +44,10 @@ services:
       - kafka_net
 
   newrelic:
-    image: newrelic/infrastructure:1.12.6
+    image: jasonswat/newrelic_kafka_1.12.6:0.1.0
     container_name: newrelic
     environment:
-      NRIA_LICENSE_KEY: "Set your nr key here"
+      NRIA_LICENSE_KEY: "$NRIA_LICENSE_KEY"
       NRIA_CUSTOM_ATTRIBUTES: '{"env":"local"}'
       NRIA_VERBOSE: 1
     depends_on:
@@ -55,9 +55,7 @@ services:
     networks:
       - kafka_net
     volumes:
-      - "$PWD/integrations.d:/var/db/newrelic-infra/integrations.d"
-      - "$PWD/newrelic-integrations/kafka-definition.yml:/var/db/newrelic-infra/newrelic-integrations/kafka-definition.yml"
-      - "$PWD/newrelic-integrations/bin/nri-kafka:/var/db/newrelic-infra/newrelic-integrations/bin/nri-kafka"
+      - "$PWD/integrations.d/kafka-config.yml:/var/db/newrelic-infra/integrations.d/kafka-config.yml"
 
 networks:
   kafka_net:
